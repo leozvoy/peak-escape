@@ -92,6 +92,10 @@ select {
   min-width: 220px;
 }
 
+input[type="range"] {
+  min-width: 160px;
+}
+
 button {
   border: none;
   cursor: pointer;
@@ -191,6 +195,25 @@ button {
   font-size: 11px;
 }
 
+.chart-axis-y {
+  fill: #94a3b8;
+  font-size: 11px;
+}
+
+.positive {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.negative {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.neutral {
+  color: #6b7280;
+}
+
 .summary-card .value {
   font-size: 36px;
   font-weight: 700;
@@ -287,6 +310,35 @@ button {
   gap: 8px;
   font-weight: 600;
   color: #374151;
+}
+
+.slider-group {
+  display: grid;
+  gap: 8px;
+}
+
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.segment {
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  padding: 10px 12px;
+  font-weight: 600;
+}
+
+.segment.active {
+  border-color: #4f46e5;
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.hidden {
+  display: none;
 }
 
 .tip {

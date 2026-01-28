@@ -23,13 +23,14 @@
       <div class="input-row">
         <input id="initialValue" type="number" min="0" step="0.01" placeholder="例如 100" />
         <button id="confirmInitial" class="primary">确认</button>
+        <button id="resetAll" class="ghost">重置</button>
       </div>
     </section>
 
     <section class="grid">
       <div class="card chart-card">
         <div class="card-header">
-          <h2>走势图（占位）</h2>
+          <h2>走势图</h2>
           <button id="addNode" class="icon-button" title="添加节点">➕</button>
         </div>
         <div class="chart-placeholder" id="chartPlaceholder">
@@ -44,9 +45,10 @@
             <polyline id="chartLinePath" fill="none" stroke="url(#chartLine)" stroke-width="3" />
             <g id="chartPoints"></g>
             <g id="chartLabels"></g>
+            <g id="chartYAxisLabels"></g>
             <text id="chartEmpty" x="320" y="130" text-anchor="middle" class="chart-empty">等待添加节点</text>
-            <text class="axis-label" x="320" y="248" text-anchor="middle">持仓比例 (%)</text>
-            <text class="axis-label" x="16" y="130" text-anchor="middle" transform="rotate(-90 16 130)">价格变化 (%)</text>
+            <text class="axis-label" x="320" y="255" text-anchor="middle">持仓比例 (%)</text>
+            <text class="axis-label" x="10" y="130" text-anchor="middle" transform="rotate(-90 10 130)">价格变化 (%)</text>
           </svg>
         </div>
       </div>
@@ -70,7 +72,7 @@
         </div>
         <div class="holdings">
           <div>
-            <span class="label">当前价格</span>
+            <span class="label">当前涨跌</span>
             <span id="currentPrice">--</span>
           </div>
           <div>
@@ -99,20 +101,30 @@
       <div class="modal-body">
         <label>
           涨/跌幅（%）
-          <input id="changePercent" type="number" step="0.01" placeholder="例如 10 或 -5" />
+          <div class="slider-group">
+            <input id="changePercent" type="number" step="0.01" placeholder="例如 10 或 -5" />
+            <input id="changePercentSlider" type="range" min="-100" max="100" step="1" value="0" />
+          </div>
         </label>
         <label>
           操作类型
-          <select id="tradeType">
-            <option value="sell">卖出</option>
-            <option value="buy">买入</option>
-          </select>
+          <div class="segmented" role="group" aria-label="操作类型">
+            <button type="button" class="segment active" data-type="sell" id="typeSell">卖出</button>
+            <button type="button" class="segment" data-type="buy" id="typeBuy">买入</button>
+          </div>
         </label>
-        <label>
-          买入/卖出比例（%）
-          <input id="tradePercent" type="number" min="0" max="100" step="0.01" placeholder="例如 20" />
+        <label id="sellPercentField">
+          卖出比例（%）
+          <div class="slider-group">
+            <input id="tradePercent" type="number" min="0" max="100" step="0.01" placeholder="例如 20" />
+            <input id="tradePercentSlider" type="range" min="0" max="100" step="1" value="0" />
+          </div>
         </label>
-        <p class="muted tip">比例以当前持仓份额为基准，买入将增加持仓，卖出将减少持仓。</p>
+        <label id="buyAmountField" class="hidden">
+          买入金额
+          <input id="buyAmount" type="number" min="0" step="0.01" placeholder="例如 50" />
+        </label>
+        <p class="muted tip">卖出比例以当前持仓份额为基准；买入金额将按当前价格增加持仓。</p>
       </div>
       <div class="modal-actions">
         <button id="confirmNode" class="primary">确认节点</button>
