@@ -14,15 +14,27 @@
         <h1>峰顶逃生收益计算器</h1>
         <p class="subtitle">记录每一次涨跌与买卖，实时掌握总价值与盈亏。</p>
       </div>
-      <div class="status-pill" id="statusPill">等待输入初始买入价值</div>
+      <div class="hero-actions">
+        <div class="status-pill" id="statusPill">等待输入初始买入价值</div>
+        <button id="resetAll" class="ghost reset-button">重置</button>
+      </div>
     </header>
 
-    <section class="chart-section">
-      <div class="card chart-card">
-        <div class="card-header">
-          <h2>走势图</h2>
-          <button id="addNode" class="icon-button" title="添加节点" aria-label="添加节点">➕</button>
+    <section class="main-layout">
+      <div class="card nodes-card" id="nodesCard">
+        <h2>操作节点</h2>
+        <p class="muted">每次点击 ➕ 新增一次涨跌与买卖记录。</p>
+        <div id="nodesList" class="nodes-list">
+          <div class="empty">暂无节点，请点击 ➕ 添加。</div>
         </div>
+      </div>
+
+      <div class="chart-section">
+        <div class="card chart-card">
+          <div class="card-header">
+            <h2>走势图</h2>
+            <button id="addNode" class="icon-button" title="添加节点" aria-label="添加节点">➕</button>
+          </div>
         <div class="summary-panel">
           <div class="summary-main">
             <h3>当前总价值</h3>
@@ -71,14 +83,7 @@
             <text class="axis-label" x="16" y="150" text-anchor="middle" transform="rotate(-90 16 150)">价格变化 (%)</text>
           </svg>
         </div>
-      </div>
-    </section>
-
-    <section class="card" id="nodesCard">
-      <h2>操作节点</h2>
-      <p class="muted">每次点击 ➕ 新增一次涨跌与买卖记录。</p>
-      <div id="nodesList" class="nodes-list">
-        <div class="empty">暂无节点，请点击 ➕ 添加。</div>
+        </div>
       </div>
     </section>
   </div>
@@ -130,7 +135,6 @@
       <div class="input-row">
         <input id="initialValue" type="number" min="0" step="0.01" placeholder="例如 100" />
         <button id="confirmInitial" class="primary">确认</button>
-        <button id="resetAll" class="ghost">重置</button>
       </div>
     </section>
   </div>

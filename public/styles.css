@@ -34,6 +34,21 @@ body {
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
 }
 
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.reset-button {
+  border: 1px solid #e5e7eb;
+  background: white;
+  color: #64748b;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
 .eyebrow {
   font-size: 12px;
   text-transform: uppercase;
@@ -74,6 +89,13 @@ h1 {
 
 .chart-section {
   display: block;
+}
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
 }
 
 .muted {
@@ -204,38 +226,38 @@ button {
 }
 
 .summary-panel {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
   gap: 16px;
-  padding: 16px;
-  border-radius: 16px;
-  background: #f8f9ff;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #f8f9ff 0%, #eef2ff 100%);
   border: 1px solid #e0e7ff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .summary-main {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  min-width: 220px;
-  flex: 1 1 280px;
+  gap: 10px;
 }
 
 .summary-main h3 {
   margin: 0;
-  font-size: 16px;
-  color: #374151;
+  font-size: 15px;
+  color: #475569;
 }
 
 .summary-panel .value {
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .summary-metrics,
 .summary-holdings {
   display: grid;
-  gap: 8px;
+  gap: 10px;
 }
 
 .summary-metrics div,
@@ -247,8 +269,10 @@ button {
 }
 
 .summary-holdings {
-  min-width: 200px;
-  flex: 0 1 220px;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(203, 213, 225, 0.5);
   align-content: start;
 }
 
@@ -268,7 +292,7 @@ button {
 
 .label {
   color: #6b7280;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .initial-overlay {
@@ -300,12 +324,10 @@ button {
   background: white;
 }
 
-.holdings {
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid #e5e7eb;
-  display: grid;
-  gap: 12px;
+.nodes-card {
+  max-height: 700px;
+  display: flex;
+  flex-direction: column;
 }
 
 .nodes-list {
@@ -313,6 +335,8 @@ button {
   flex-direction: column;
   gap: 12px;
   margin-top: 16px;
+  overflow-y: auto;
+  padding-right: 6px;
 }
 
 .node-item {
@@ -418,7 +442,16 @@ button {
     align-items: flex-start;
   }
 
+  .hero-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .status-pill {
     align-self: flex-start;
+  }
+
+  .main-layout {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
