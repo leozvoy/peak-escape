@@ -9,32 +9,60 @@
 <body>
   <div class="app">
     <header class="hero">
-      <div>
+      <div class="hero-intro">
         <p class="eyebrow">Peak Escape</p>
         <h1>峰顶逃生收益计算器</h1>
         <p class="subtitle">记录每一次涨跌与买卖，实时掌握总价值与盈亏。</p>
       </div>
-      <div class="status-pill" id="statusPill">等待输入初始买入价值</div>
+      <div class="hero-actions">
+        <div class="status-pill" id="statusPill">等待输入初始买入价值</div>
+        <button id="resetAll" class="ghost reset-button">重置</button>
+      </div>
     </header>
 
-    <section class="card" id="initialCard">
-      <h2>输入初始买入价值</h2>
-      <p class="muted">请输入买入的价值（无需单位），确认后即可开始添加节点。</p>
-      <div class="input-row">
-        <input id="initialValue" type="number" min="0" step="0.01" placeholder="例如 100" />
-        <button id="confirmInitial" class="primary">确认</button>
-        <button id="resetAll" class="ghost">重置</button>
-      </div>
-    </section>
-
-    <section class="grid">
-      <div class="card chart-card">
-        <div class="card-header">
-          <h2>走势图</h2>
-          <button id="addNode" class="icon-button" title="添加节点">➕</button>
+    <section class="main-layout">
+      <div class="card summary-card">
+        <div class="summary-panel">
+          <div class="summary-main">
+            <h3>当前总价值</h3>
+            <div class="value" id="totalValue">--</div>
+            <div class="summary-metrics">
+              <div>
+                <span class="label">总盈亏</span>
+                <span id="totalProfit">--</span>
+              </div>
+              <div>
+                <span class="label">已实现盈亏</span>
+                <span id="realizedProfit">--</span>
+              </div>
+              <div>
+                <span class="label">未实现盈亏</span>
+                <span id="unrealizedProfit">--</span>
+              </div>
+            </div>
+            <div class="summary-divider" aria-hidden="true"></div>
+          </div>
+          <div class="summary-holdings">
+            <div>
+              <span class="label">当前涨跌</span>
+              <span id="currentPrice">--</span>
+            </div>
+            <div>
+              <span class="label">持仓份额</span>
+              <span id="currentShares">--</span>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="chart-section">
+        <div class="card chart-card">
+          <div class="card-header">
+            <h2>走势图</h2>
+            <button id="addNode" class="icon-button" title="添加节点" aria-label="添加节点">➕</button>
+          </div>
         <div class="chart-placeholder" id="chartPlaceholder">
-          <svg id="trendChart" viewBox="0 0 640 260" role="img" aria-label="价格变化与持仓比例折线图">
+          <svg id="trendChart" viewBox="0 0 640 300" role="img" aria-label="价格变化与持仓比例折线图">
             <defs>
               <linearGradient id="chartLine" x1="0" x2="1">
                 <stop offset="0%" stop-color="#4f46e5" />
@@ -46,44 +74,16 @@
             <g id="chartPoints"></g>
             <g id="chartLabels"></g>
             <g id="chartYAxisLabels"></g>
-            <text id="chartEmpty" x="320" y="130" text-anchor="middle" class="chart-empty">等待添加节点</text>
-            <text class="axis-label" x="320" y="255" text-anchor="middle">持仓比例 (%)</text>
-            <text class="axis-label" x="10" y="130" text-anchor="middle" transform="rotate(-90 10 130)">价格变化 (%)</text>
+            <text id="chartEmpty" x="320" y="150" text-anchor="middle" class="chart-empty">等待添加节点</text>
+            <text class="axis-label" x="320" y="292" text-anchor="middle">持仓比例 (%)</text>
+            <text class="axis-label" x="16" y="150" text-anchor="middle" transform="rotate(-90 16 150)">价格变化 (%)</text>
           </svg>
         </div>
-      </div>
-
-      <div class="card summary-card">
-        <h2>当前总价值</h2>
-        <div class="value" id="totalValue">--</div>
-        <div class="summary">
-          <div>
-            <span class="label">总盈亏</span>
-            <span id="totalProfit">--</span>
-          </div>
-          <div>
-            <span class="label">已实现盈亏</span>
-            <span id="realizedProfit">--</span>
-          </div>
-          <div>
-            <span class="label">未实现盈亏</span>
-            <span id="unrealizedProfit">--</span>
-          </div>
-        </div>
-        <div class="holdings">
-          <div>
-            <span class="label">当前涨跌</span>
-            <span id="currentPrice">--</span>
-          </div>
-          <div>
-            <span class="label">持仓份额</span>
-            <span id="currentShares">--</span>
-          </div>
         </div>
       </div>
     </section>
 
-    <section class="card" id="nodesCard">
+    <section class="card nodes-card" id="nodesCard">
       <h2>操作节点</h2>
       <p class="muted">每次点击 ➕ 新增一次涨跌与买卖记录。</p>
       <div id="nodesList" class="nodes-list">
@@ -130,6 +130,17 @@
         <button id="confirmNode" class="primary">确认节点</button>
       </div>
     </div>
+  </div>
+
+  <div class="initial-overlay" id="initialOverlay" aria-hidden="false">
+    <section class="card initial-card" id="initialCard">
+      <h2>输入初始买入价值</h2>
+      <p class="muted">请输入买入的价值（无需单位），确认后即可开始添加节点。</p>
+      <div class="input-row">
+        <input id="initialValue" type="number" min="0" step="0.01" placeholder="例如 100" />
+        <button id="confirmInitial" class="primary">确认</button>
+      </div>
+    </section>
   </div>
 
   <script src="app.js"></script>

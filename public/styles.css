@@ -26,12 +26,40 @@ body {
 .hero {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
+  align-items: stretch;
+  gap: 20px;
   padding: 24px;
   border-radius: 20px;
   background: white;
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.hero-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 520px;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  align-self: flex-start;
+}
+
+.reset-button {
+  border: 1px solid #c7d2fe;
+  background: #eef2ff;
+  color: #4338ca;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  box-shadow: 0 8px 16px rgba(79, 70, 229, 0.15);
+}
+
+.reset-button:hover {
+  background: #e0e7ff;
 }
 
 .eyebrow {
@@ -70,6 +98,17 @@ h1 {
 
 .card h2 {
   margin-top: 0;
+}
+
+.chart-section {
+  display: block;
+}
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
 }
 
 .muted {
@@ -121,12 +160,6 @@ button {
   color: #6b7280;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-}
-
 .chart-card {
   display: flex;
   flex-direction: column;
@@ -144,17 +177,22 @@ button {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #111827;
+  background: #3b82f6;
   color: white;
   font-size: 20px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 10px 18px rgba(59, 130, 246, 0.25);
+}
+
+.icon-button:hover {
+  background: #2563eb;
 }
 
 .chart-placeholder {
   flex: 1;
-  min-height: 220px;
+  min-height: 280px;
   border-radius: 18px;
   border: 1px dashed #c7d2fe;
   display: flex;
@@ -200,6 +238,67 @@ button {
   font-size: 11px;
 }
 
+.summary-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  padding: 8px 4px;
+}
+
+.summary-card {
+  padding: 28px 30px;
+}
+
+.summary-main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summary-main h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #1f2937;
+}
+
+.summary-panel .value {
+  font-size: 52px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #111827;
+}
+
+.summary-metrics,
+.summary-holdings {
+  display: grid;
+  gap: 12px;
+}
+
+.summary-metrics div,
+.summary-holdings div {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: center;
+  column-gap: 12px;
+  font-size: 18px;
+}
+
+.summary-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 4px 0 2px;
+}
+
+.summary-metrics div span:last-child,
+.summary-holdings div span:last-child {
+  text-align: right;
+}
+
+.summary-holdings {
+  padding-top: 6px;
+  align-content: start;
+}
+
 .positive {
   color: #16a34a;
   font-weight: 600;
@@ -214,36 +313,43 @@ button {
   color: #6b7280;
 }
 
-.summary-card .value {
-  font-size: 36px;
-  font-weight: 700;
-  margin: 12px 0 24px;
-}
-
-.summary {
-  display: grid;
-  gap: 12px;
-}
-
-.summary div,
-.holdings div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-}
-
 .label {
   color: #6b7280;
-  font-size: 14px;
+  font-size: 18px;
 }
 
-.holdings {
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid #e5e7eb;
-  display: grid;
-  gap: 12px;
+.initial-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 10;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.initial-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.initial-card {
+  max-width: 520px;
+  width: min(520px, 100%);
+}
+
+.nodes-list .empty,
+.nodes-list .node-item {
+  background: white;
+}
+
+.nodes-card {
+  display: flex;
+  flex-direction: column;
 }
 
 .nodes-list {
@@ -356,7 +462,24 @@ button {
     align-items: flex-start;
   }
 
+  .hero-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .status-pill {
     align-self: flex-start;
+  }
+
+  .summary-card {
+    padding: 22px;
+  }
+
+  .summary-panel .value {
+    font-size: 42px;
+  }
+
+  .main-layout {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

@@ -1,6 +1,7 @@
 const initialInput = document.getElementById("initialValue");
 const confirmInitialButton = document.getElementById("confirmInitial");
 const statusPill = document.getElementById("statusPill");
+const initialOverlay = document.getElementById("initialOverlay");
 const totalValueEl = document.getElementById("totalValue");
 const totalProfitEl = document.getElementById("totalProfit");
 const realizedProfitEl = document.getElementById("realizedProfit");
@@ -176,8 +177,8 @@ const renderChart = () => {
   const maxPrice = Math.max(...priceValues, 120);
 
   const width = 640;
-  const height = 260;
-  const padding = { top: 20, right: 24, bottom: 30, left: 40 };
+  const height = 300;
+  const padding = { top: 20, right: 24, bottom: 44, left: 56 };
   const chartWidth = width - padding.left - padding.right;
   const chartHeight = height - padding.top - padding.bottom;
 
@@ -233,7 +234,7 @@ const renderChart = () => {
 
     const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
     label.setAttribute("x", scaleX(index));
-    label.setAttribute("y", height - 10);
+    label.setAttribute("y", height - 16);
     label.setAttribute("text-anchor", "middle");
     label.setAttribute("class", "chart-axis-tick");
     label.textContent = `${point.holdingPercent.toFixed(1)}%`;
@@ -280,6 +281,11 @@ const setStatus = (text) => {
   statusPill.textContent = text;
 };
 
+const setInitialOverlay = (visible) => {
+  initialOverlay.classList.toggle("hidden", !visible);
+  initialOverlay.setAttribute("aria-hidden", (!visible).toString());
+};
+
 confirmInitialButton.addEventListener("click", () => {
   const value = Number(initialInput.value);
   if (!Number.isFinite(value) || value <= 0) {
@@ -303,6 +309,7 @@ confirmInitialButton.addEventListener("click", () => {
   updateSummary();
   renderNodes();
   renderChart();
+  setInitialOverlay(false);
 });
 
 addNodeButton.addEventListener("click", openModal);
@@ -420,6 +427,7 @@ resetAllButton.addEventListener("click", () => {
   unrealizedProfitEl.classList.remove("positive", "negative", "neutral");
   renderNodes();
   renderChart();
+  setInitialOverlay(true);
 });
 
 syncSlider(changePercentInput, changePercentSlider);
@@ -428,3 +436,4 @@ syncSlider(tradePercentInput, tradePercentSlider);
 updateSummary();
 renderNodes();
 renderChart();
+setInitialOverlay(!state.initialized);
