@@ -341,9 +341,9 @@ confirmNodeButton.addEventListener("click", () => {
     return;
   }
 
-  state.cumulativeChangePercent += changePercent;
-  state.price = state.initialValue * (1 + state.cumulativeChangePercent / 100);
-  const priceChangePercent = state.cumulativeChangePercent;
+  state.cumulativeChangePercent = changePercent;
+  state.price = state.initialValue * (1 + changePercent / 100);
+  const priceChangePercent = changePercent;
 
   let tradeValue = 0;
   if (tradeType === "sell") {
@@ -377,7 +377,7 @@ confirmNodeButton.addEventListener("click", () => {
     holdingPercent,
     holdingValue,
     tradeValue,
-    pricePercent: 100 + state.cumulativeChangePercent,
+    pricePercent: 100 + changePercent,
     sequence: state.nodeCounter
   });
 
