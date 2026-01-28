@@ -72,6 +72,10 @@ h1 {
   margin-top: 0;
 }
 
+.chart-section {
+  display: block;
+}
+
 .muted {
   color: #6b7280;
 }
@@ -121,12 +125,6 @@ button {
   color: #6b7280;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-}
-
 .chart-card {
   display: flex;
   flex-direction: column;
@@ -144,17 +142,22 @@ button {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #111827;
+  background: #3b82f6;
   color: white;
   font-size: 20px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 10px 18px rgba(59, 130, 246, 0.25);
+}
+
+.icon-button:hover {
+  background: #2563eb;
 }
 
 .chart-placeholder {
   flex: 1;
-  min-height: 220px;
+  min-height: 280px;
   border-radius: 18px;
   border: 1px dashed #c7d2fe;
   display: flex;
@@ -200,6 +203,55 @@ button {
   font-size: 11px;
 }
 
+.summary-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  background: #f8f9ff;
+  border: 1px solid #e0e7ff;
+}
+
+.summary-main {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 220px;
+  flex: 1 1 280px;
+}
+
+.summary-main h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #374151;
+}
+
+.summary-panel .value {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.summary-metrics,
+.summary-holdings {
+  display: grid;
+  gap: 8px;
+}
+
+.summary-metrics div,
+.summary-holdings div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.summary-holdings {
+  min-width: 200px;
+  flex: 0 1 220px;
+  align-content: start;
+}
+
 .positive {
   color: #16a34a;
   font-weight: 600;
@@ -214,28 +266,38 @@ button {
   color: #6b7280;
 }
 
-.summary-card .value {
-  font-size: 36px;
-  font-weight: 700;
-  margin: 12px 0 24px;
-}
-
-.summary {
-  display: grid;
-  gap: 12px;
-}
-
-.summary div,
-.holdings div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-}
-
 .label {
   color: #6b7280;
   font-size: 14px;
+}
+
+.initial-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 10;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.initial-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.initial-card {
+  max-width: 520px;
+  width: min(520px, 100%);
+}
+
+.nodes-list .empty,
+.nodes-list .node-item {
+  background: white;
 }
 
 .holdings {
