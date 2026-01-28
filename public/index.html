@@ -33,10 +33,20 @@
           <button id="addNode" class="icon-button" title="添加节点">➕</button>
         </div>
         <div class="chart-placeholder" id="chartPlaceholder">
-          <div class="chart-text">
-            <p>这里将展示涨跌与买卖节点的图表。</p>
-            <p class="muted">当前版本先以列表形式记录。</p>
-          </div>
+          <svg id="trendChart" viewBox="0 0 640 260" role="img" aria-label="价格变化与持仓比例折线图">
+            <defs>
+              <linearGradient id="chartLine" x1="0" x2="1">
+                <stop offset="0%" stop-color="#4f46e5" />
+                <stop offset="100%" stop-color="#06b6d4" />
+              </linearGradient>
+            </defs>
+            <g id="chartGrid"></g>
+            <polyline id="chartLinePath" fill="none" stroke="url(#chartLine)" stroke-width="3" />
+            <g id="chartPoints"></g>
+            <text id="chartEmpty" x="320" y="130" text-anchor="middle" class="chart-empty">等待添加节点</text>
+            <text class="axis-label" x="320" y="248" text-anchor="middle">持仓比例 (%)</text>
+            <text class="axis-label" x="16" y="130" text-anchor="middle" transform="rotate(-90 16 130)">价格变化 (%)</text>
+          </svg>
         </div>
       </div>
 

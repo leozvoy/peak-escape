@@ -160,8 +160,30 @@ button {
   background: #f8f9ff;
 }
 
-.chart-text {
-  text-align: center;
+#trendChart {
+  width: 100%;
+  height: 100%;
+}
+
+.chart-grid-line {
+  stroke: rgba(148, 163, 184, 0.4);
+  stroke-dasharray: 4 4;
+}
+
+.chart-point {
+  fill: white;
+  stroke: #4f46e5;
+  stroke-width: 2;
+}
+
+.chart-empty {
+  fill: #9ca3af;
+  font-size: 14px;
+}
+
+.axis-label {
+  fill: #6b7280;
+  font-size: 12px;
 }
 
 .summary-card .value {

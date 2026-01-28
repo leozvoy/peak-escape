@@ -15,10 +15,15 @@ const changePercentInput = document.getElementById("changePercent");
 const tradeTypeSelect = document.getElementById("tradeType");
 const tradePercentInput = document.getElementById("tradePercent");
 const nodesList = document.getElementById("nodesList");
+const chartGrid = document.getElementById("chartGrid");
+const chartLinePath = document.getElementById("chartLinePath");
+const chartPoints = document.getElementById("chartPoints");
+const chartEmpty = document.getElementById("chartEmpty");
 
 const state = {
   initialized: false,
   initialValue: 0,
+  initialShares: 1,
   price: 0,
   shares: 0,
   costBasisTotal: 0,
@@ -88,6 +93,90 @@ const renderNodes = () => {
   });
 };
 
+const renderChart = () => {
+  chartGrid.innerHTML = "";
+  chartPoints.innerHTML = "";
+
+  if (!state.initialized) {
+    chartLinePath.setAttribute("points", "");
+    chartEmpty.textContent = "等待输入初始价值";
+    chartEmpty.style.display = "block";
+    return;
+  }
+
+  const dataPoints = [
+    {
+      pricePercent: 100,
+      holdingPercent: 100
+    },
+    ...state.nodes.map((node) => ({
+      pricePercent: (node.price / state.initialValue) * 100,
+      holdingPercent: (node.shares / state.initialShares) * 100
+    }))
+  ];
+
+  const priceValues = dataPoints.map((point) => point.pricePercent);
+  const holdingValues = dataPoints.map((point) => point.holdingPercent);
+
+  const minPrice = Math.min(...priceValues, 0);
+  const maxPrice = Math.max(...priceValues, 120);
+  const minHolding = Math.min(...holdingValues, 0);
+  const maxHolding = Math.max(...holdingValues, 120);
+
+  const width = 640;
+  const height = 260;
+  const padding = { top: 20, right: 24, bottom: 30, left: 40 };
+  const chartWidth = width - padding.left - padding.right;
+  const chartHeight = height - padding.top - padding.bottom;
+
+  const scaleX = (value) =>
+    padding.left + ((value - minHolding) / (maxHolding - minHolding || 1)) * chartWidth;
+  const scaleY = (value) =>
+    padding.top + (1 - (value - minPrice) / (maxPrice - minPrice || 1)) * chartHeight;
+
+  const gridLines = 4;
+  for (let i = 0; i <= gridLines; i += 1) {
+    const y = padding.top + (chartHeight / gridLines) * i;
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", padding.left);
+    line.setAttribute("x2", width - padding.right);
+    line.setAttribute("y1", y);
+    line.setAttribute("y2", y);
+    line.setAttribute("class", "chart-grid-line");
+    chartGrid.appendChild(line);
+  }
+
+  for (let i = 0; i <= gridLines; i += 1) {
+    const x = padding.left + (chartWidth / gridLines) * i;
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", x);
+    line.setAttribute("x2", x);
+    line.setAttribute("y1", padding.top);
+    line.setAttribute("y2", height - padding.bottom);
+    line.setAttribute("class", "chart-grid-line");
+    chartGrid.appendChild(line);
+  }
+
+  const points = dataPoints
+    .map((point) => `${scaleX(point.holdingPercent)},${scaleY(point.pricePercent)}`)
+    .join(" ");
+  chartLinePath.setAttribute("points", points);
+
+  dataPoints.forEach((point) => {
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", scaleX(point.holdingPercent));
+    circle.setAttribute("cy", scaleY(point.pricePercent));
+    circle.setAttribute("r", 4);
+    circle.setAttribute("class", "chart-point");
+    chartPoints.appendChild(circle);
+  });
+
+  chartEmpty.style.display = state.nodes.length === 0 ? "block" : "none";
+  if (state.nodes.length === 0) {
+    chartEmpty.textContent = "已初始化，等待添加节点";
+  }
+};
+
 const openModal = () => {
   if (!state.initialized) return;
   nodeModal.classList.add("show");
@@ -114,6 +203,7 @@ confirmInitialButton.addEventListener("click", () => {
   state.initialValue = value;
   state.price = value;
   state.shares = 1;
+  state.initialShares = 1;
   state.costBasisTotal = value;
   state.realizedProfit = 0;
   state.nodes = [];
@@ -121,6 +211,7 @@ confirmInitialButton.addEventListener("click", () => {
   setStatus("已初始化，可添加节点");
   updateSummary();
   renderNodes();
+  renderChart();
 });
 
 addNodeButton.addEventListener("click", openModal);
@@ -177,6 +268,7 @@ confirmNodeButton.addEventListener("click", () => {
 
   updateSummary();
   renderNodes();
+  renderChart();
   setStatus("节点已更新");
 
   changePercentInput.value = "";
@@ -186,3 +278,4 @@ confirmNodeButton.addEventListener("click", () => {
 
 updateSummary();
 renderNodes();
+renderChart();
