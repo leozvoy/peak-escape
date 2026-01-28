@@ -45,16 +45,21 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 10px;
+  align-self: flex-start;
 }
 
 .reset-button {
-  border: 1px solid #e5e7eb;
-  background: white;
-  color: #64748b;
-  padding: 8px 14px;
+  border: 1px solid #c7d2fe;
+  background: #eef2ff;
+  color: #4338ca;
+  padding: 8px 16px;
   border-radius: 999px;
   font-size: 14px;
+  box-shadow: 0 8px 16px rgba(79, 70, 229, 0.15);
+}
+
+.reset-button:hover {
+  background: #e0e7ff;
 }
 
 .eyebrow {
@@ -269,11 +274,6 @@ button {
   gap: 12px;
 }
 
-.summary-metrics {
-  padding-bottom: 12px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
 .summary-metrics div,
 .summary-holdings div {
   display: grid;
@@ -281,6 +281,12 @@ button {
   align-items: center;
   column-gap: 12px;
   font-size: 18px;
+}
+
+.summary-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 4px 0 2px;
 }
 
 .summary-metrics div span:last-child,
