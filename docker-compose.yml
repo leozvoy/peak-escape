@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  peak-escape:
+    build: .
+    ports:
+      - "9001:9001"
+    restart: unless-stopped
