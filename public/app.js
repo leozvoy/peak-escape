@@ -21,6 +21,9 @@ const sellPercentField = document.getElementById("sellPercentField");
 const buyAmountField = document.getElementById("buyAmountField");
 const typeSellButton = document.getElementById("typeSell");
 const typeBuyButton = document.getElementById("typeBuy");
+const changePercentInput = document.getElementById("changePercent");
+const tradeTypeSelect = document.getElementById("tradeType");
+const tradePercentInput = document.getElementById("tradePercent");
 const nodesList = document.getElementById("nodesList");
 const chartGrid = document.getElementById("chartGrid");
 const chartLinePath = document.getElementById("chartLinePath");
@@ -79,6 +82,12 @@ const applySignedStyle = (element, value) => {
   } else {
     element.classList.add("neutral");
   }
+const formatShares = (value) => {
+  if (!Number.isFinite(value)) return "--";
+  return value.toLocaleString("zh-CN", {
+    minimumFractionDigits: 4,
+    maximumFractionDigits: 4
+  });
 };
 
 const updateSummary = () => {
@@ -99,6 +108,13 @@ const updateSummary = () => {
   currentSharesEl.textContent = `${formatPercent(holdingPercent)} ｜ ${formatMoney(totalValue)}`;
   applySignedStyle(realizedProfitEl, state.realizedProfit);
   applySignedStyle(unrealizedProfitEl, unrealizedProfit);
+
+  totalValueEl.textContent = formatMoney(totalValue);
+  totalProfitEl.textContent = formatMoney(totalProfit);
+  realizedProfitEl.textContent = formatMoney(state.realizedProfit);
+  unrealizedProfitEl.textContent = formatMoney(unrealizedProfit);
+  currentPriceEl.textContent = formatMoney(state.price);
+  currentSharesEl.textContent = formatShares(state.shares);
 };
 
 const renderNodes = () => {
@@ -133,6 +149,13 @@ const renderNodes = () => {
       node.holdingPercent
     )} ｜ ${formatMoney(node.holdingValue)}`;
     applySignedStyle(result, node.priceChangePercent);
+    title.textContent = `节点 ${index + 1} · ${node.changePercent}%`;
+
+    const detail = document.createElement("span");
+    detail.textContent = `${node.tradeType === "sell" ? "卖出" : "买入"} ${node.tradePercent}% 持仓`;
+
+    const result = document.createElement("span");
+    result.textContent = `当前价格 ${formatMoney(node.price)} ｜ 持仓 ${formatShares(node.shares)}`;
 
     item.appendChild(title);
     item.appendChild(detail);
@@ -319,6 +342,14 @@ confirmNodeButton.addEventListener("click", () => {
   }
 
   if (tradeType === "sell" && (tradePercent < 0 || tradePercent > 100)) {
+  const tradeType = tradeTypeSelect.value;
+
+  if (!Number.isFinite(changePercent) || !Number.isFinite(tradePercent)) {
+    setStatus("请填写有效的涨跌幅和比例");
+    return;
+  }
+
+  if (tradePercent < 0 || tradePercent > 100) {
     setStatus("比例需在 0 到 100 之间");
     return;
   }
@@ -337,6 +368,8 @@ confirmNodeButton.addEventListener("click", () => {
   const priceChangePercent = ((state.price - state.initialValue) / state.initialValue) * 100;
 
   let tradeValue = 0;
+  state.price *= 1 + changePercent / 100;
+
   if (tradeType === "sell") {
     const sellShares = state.shares * (tradePercent / 100);
     const proceeds = sellShares * state.price;
@@ -356,6 +389,13 @@ confirmNodeButton.addEventListener("click", () => {
   const holdingPercent = (state.shares / state.initialShares) * 100;
   const holdingValue = state.shares * state.price;
 
+  } else {
+    const buyShares = state.shares * (tradePercent / 100);
+    const buyCost = buyShares * state.price;
+    state.shares += buyShares;
+    state.costBasisTotal += buyCost;
+  }
+
   state.nodes.push({
     changePercent: changePercent.toFixed(2),
     tradePercent: tradePercent.toFixed(2),
@@ -366,6 +406,7 @@ confirmNodeButton.addEventListener("click", () => {
     holdingPercent,
     holdingValue,
     tradeValue
+    shares: state.shares
   });
 
   updateSummary();
@@ -407,6 +448,9 @@ resetAllButton.addEventListener("click", () => {
 
 syncSlider(changePercentInput, changePercentSlider);
 syncSlider(tradePercentInput, tradePercentSlider);
+
+  closeModal();
+});
 
 updateSummary();
 renderNodes();

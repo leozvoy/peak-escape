@@ -49,6 +49,9 @@
             <text id="chartEmpty" x="320" y="130" text-anchor="middle" class="chart-empty">等待添加节点</text>
             <text class="axis-label" x="320" y="255" text-anchor="middle">持仓比例 (%)</text>
             <text class="axis-label" x="10" y="130" text-anchor="middle" transform="rotate(-90 10 130)">价格变化 (%)</text>
+            <text id="chartEmpty" x="320" y="130" text-anchor="middle" class="chart-empty">等待添加节点</text>
+            <text class="axis-label" x="320" y="248" text-anchor="middle">持仓比例 (%)</text>
+            <text class="axis-label" x="16" y="130" text-anchor="middle" transform="rotate(-90 16 130)">价格变化 (%)</text>
           </svg>
         </div>
       </div>
@@ -73,6 +76,7 @@
         <div class="holdings">
           <div>
             <span class="label">当前涨跌</span>
+            <span class="label">当前价格</span>
             <span id="currentPrice">--</span>
           </div>
           <div>
@@ -125,6 +129,20 @@
           <input id="buyAmount" type="number" min="0" step="0.01" placeholder="例如 50" />
         </label>
         <p class="muted tip">卖出比例以当前持仓份额为基准；买入金额将按当前价格增加持仓。</p>
+          <input id="changePercent" type="number" step="0.01" placeholder="例如 10 或 -5" />
+        </label>
+        <label>
+          操作类型
+          <select id="tradeType">
+            <option value="sell">卖出</option>
+            <option value="buy">买入</option>
+          </select>
+        </label>
+        <label>
+          买入/卖出比例（%）
+          <input id="tradePercent" type="number" min="0" max="100" step="0.01" placeholder="例如 20" />
+        </label>
+        <p class="muted tip">比例以当前持仓份额为基准，买入将增加持仓，卖出将减少持仓。</p>
       </div>
       <div class="modal-actions">
         <button id="confirmNode" class="primary">确认节点</button>
