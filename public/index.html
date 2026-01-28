@@ -9,14 +9,44 @@
 <body>
   <div class="app">
     <header class="hero">
-      <div>
+      <div class="hero-intro">
         <p class="eyebrow">Peak Escape</p>
         <h1>峰顶逃生收益计算器</h1>
         <p class="subtitle">记录每一次涨跌与买卖，实时掌握总价值与盈亏。</p>
+        <div class="hero-actions">
+          <div class="status-pill" id="statusPill">等待输入初始买入价值</div>
+          <button id="resetAll" class="ghost reset-button">重置</button>
+        </div>
       </div>
-      <div class="hero-actions">
-        <div class="status-pill" id="statusPill">等待输入初始买入价值</div>
-        <button id="resetAll" class="ghost reset-button">重置</button>
+      <div class="summary-panel hero-summary">
+        <div class="summary-main">
+          <h3>当前总价值</h3>
+          <div class="value" id="totalValue">--</div>
+          <div class="summary-metrics">
+            <div>
+              <span class="label">总盈亏</span>
+              <span id="totalProfit">--</span>
+            </div>
+            <div>
+              <span class="label">已实现盈亏</span>
+              <span id="realizedProfit">--</span>
+            </div>
+            <div>
+              <span class="label">未实现盈亏</span>
+              <span id="unrealizedProfit">--</span>
+            </div>
+          </div>
+        </div>
+        <div class="summary-holdings">
+          <div>
+            <span class="label">当前涨跌</span>
+            <span id="currentPrice">--</span>
+          </div>
+          <div>
+            <span class="label">持仓份额</span>
+            <span id="currentShares">--</span>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -35,36 +65,6 @@
             <h2>走势图</h2>
             <button id="addNode" class="icon-button" title="添加节点" aria-label="添加节点">➕</button>
           </div>
-        <div class="summary-panel">
-          <div class="summary-main">
-            <h3>当前总价值</h3>
-            <div class="value" id="totalValue">--</div>
-            <div class="summary-metrics">
-              <div>
-                <span class="label">总盈亏</span>
-                <span id="totalProfit">--</span>
-              </div>
-              <div>
-                <span class="label">已实现盈亏</span>
-                <span id="realizedProfit">--</span>
-              </div>
-              <div>
-                <span class="label">未实现盈亏</span>
-                <span id="unrealizedProfit">--</span>
-              </div>
-            </div>
-          </div>
-          <div class="summary-holdings">
-            <div>
-              <span class="label">当前涨跌</span>
-              <span id="currentPrice">--</span>
-            </div>
-            <div>
-              <span class="label">持仓份额</span>
-              <span id="currentShares">--</span>
-            </div>
-          </div>
-        </div>
         <div class="chart-placeholder" id="chartPlaceholder">
           <svg id="trendChart" viewBox="0 0 640 300" role="img" aria-label="价格变化与持仓比例折线图">
             <defs>
