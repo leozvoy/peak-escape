@@ -99,10 +99,6 @@ h1 {
   display: block;
 }
 
-.summary-section {
-  display: block;
-}
-
 .main-layout {
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
@@ -239,7 +235,7 @@ button {
 
 .summary-panel {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
   padding: 8px 4px;
 }
@@ -273,6 +269,11 @@ button {
   gap: 12px;
 }
 
+.summary-metrics {
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
 .summary-metrics div,
 .summary-holdings div {
   display: grid;
@@ -288,8 +289,7 @@ button {
 }
 
 .summary-holdings {
-  padding-top: 12px;
-  border-top: 1px solid #e5e7eb;
+  padding-top: 6px;
   align-content: start;
 }
 
@@ -342,7 +342,6 @@ button {
 }
 
 .nodes-card {
-  max-height: 700px;
   display: flex;
   flex-direction: column;
 }
@@ -352,8 +351,6 @@ button {
   flex-direction: column;
   gap: 12px;
   margin-top: 16px;
-  overflow-y: auto;
-  padding-right: 6px;
 }
 
 .node-item {
@@ -470,10 +467,6 @@ button {
 
   .summary-card {
     padding: 22px;
-  }
-
-  .summary-panel {
-    grid-template-columns: minmax(0, 1fr);
   }
 
   .summary-panel .value {
