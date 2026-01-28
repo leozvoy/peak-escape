@@ -37,6 +37,9 @@ const state = {
   shares: 0,
   costBasisTotal: 0,
   realizedProfit: 0,
+  realizedProceeds: 0,
+  cumulativeChangePercent: 0,
+  nodeCounter: 0,
   nodes: []
 };
 
@@ -84,19 +87,21 @@ const applySignedStyle = (element, value) => {
 const updateSummary = () => {
   if (!state.initialized) return;
 
-  const totalValue = state.shares * state.price;
-  const unrealizedProfit = totalValue - state.costBasisTotal;
+  const holdingValue = state.shares * state.price;
+  const totalValue = holdingValue + state.realizedProceeds;
+  const unrealizedProfit = holdingValue - state.costBasisTotal;
   const totalProfit = state.realizedProfit + unrealizedProfit;
-  const priceChangePercent = ((state.price - state.initialValue) / state.initialValue) * 100;
+  const priceChangePercent = state.cumulativeChangePercent;
   const holdingPercent = (state.shares / state.initialShares) * 100;
 
   totalValueEl.textContent = formatMoney(totalValue);
-  totalProfitEl.textContent = formatMoney(totalProfit);
+  totalProfitEl.textContent = formatSignedMoney(totalProfit);
   realizedProfitEl.textContent = formatSignedMoney(state.realizedProfit);
   unrealizedProfitEl.textContent = formatSignedMoney(unrealizedProfit);
   currentPriceEl.textContent = formatSignedPercent(priceChangePercent);
   applySignedStyle(currentPriceEl, priceChangePercent);
-  currentSharesEl.textContent = `${formatPercent(holdingPercent)} ｜ ${formatMoney(totalValue)}`;
+  currentSharesEl.textContent = `${formatPercent(holdingPercent)} ｜ ${formatMoney(holdingValue)}`;
+  applySignedStyle(totalProfitEl, totalProfit);
   applySignedStyle(realizedProfitEl, state.realizedProfit);
   applySignedStyle(unrealizedProfitEl, unrealizedProfit);
 };
@@ -112,13 +117,13 @@ const renderNodes = () => {
     return;
   }
 
-  state.nodes.forEach((node, index) => {
+  [...state.nodes].reverse().forEach((node) => {
     const item = document.createElement("div");
     item.className = "node-item";
 
     const title = document.createElement("strong");
     const changeValue = Number(node.changePercent);
-    title.textContent = `节点 ${index + 1} · ${formatSignedPercent(changeValue)}`;
+    title.textContent = `节点 ${node.sequence} · ${formatSignedPercent(changeValue)}`;
     applySignedStyle(title, changeValue);
 
     const detail = document.createElement("span");
@@ -160,8 +165,8 @@ const renderChart = () => {
       holdingPercent: 100
     },
     ...state.nodes.map((node) => ({
-      pricePercent: (node.price / state.initialValue) * 100,
-      holdingPercent: (node.shares / state.initialShares) * 100
+      pricePercent: node.pricePercent,
+      holdingPercent: node.holdingPercent
     }))
   ];
 
@@ -289,6 +294,9 @@ confirmInitialButton.addEventListener("click", () => {
   state.initialShares = 1;
   state.costBasisTotal = value;
   state.realizedProfit = 0;
+  state.realizedProceeds = 0;
+  state.cumulativeChangePercent = 0;
+  state.nodeCounter = 0;
   state.nodes = [];
 
   setStatus("已初始化，可添加节点");
@@ -333,8 +341,9 @@ confirmNodeButton.addEventListener("click", () => {
     return;
   }
 
-  state.price *= 1 + changePercent / 100;
-  const priceChangePercent = ((state.price - state.initialValue) / state.initialValue) * 100;
+  state.cumulativeChangePercent += changePercent;
+  state.price = state.initialValue * (1 + state.cumulativeChangePercent / 100);
+  const priceChangePercent = state.cumulativeChangePercent;
 
   let tradeValue = 0;
   if (tradeType === "sell") {
@@ -344,6 +353,7 @@ confirmNodeButton.addEventListener("click", () => {
     state.realizedProfit += proceeds - costPortion;
     state.costBasisTotal -= costPortion;
     state.shares -= sellShares;
+    state.realizedProceeds += proceeds;
     tradeValue = proceeds;
   } else {
     const buyShares = buyAmount / state.price;
@@ -356,6 +366,7 @@ confirmNodeButton.addEventListener("click", () => {
   const holdingPercent = (state.shares / state.initialShares) * 100;
   const holdingValue = state.shares * state.price;
 
+  state.nodeCounter += 1;
   state.nodes.push({
     changePercent: changePercent.toFixed(2),
     tradePercent: tradePercent.toFixed(2),
@@ -365,7 +376,9 @@ confirmNodeButton.addEventListener("click", () => {
     priceChangePercent,
     holdingPercent,
     holdingValue,
-    tradeValue
+    tradeValue,
+    pricePercent: 100 + state.cumulativeChangePercent,
+    sequence: state.nodeCounter
   });
 
   updateSummary();
@@ -389,6 +402,9 @@ resetAllButton.addEventListener("click", () => {
   state.shares = 0;
   state.costBasisTotal = 0;
   state.realizedProfit = 0;
+  state.realizedProceeds = 0;
+  state.cumulativeChangePercent = 0;
+  state.nodeCounter = 0;
   state.nodes = [];
   initialInput.value = "";
   setStatus("等待输入初始买入价值");
@@ -399,6 +415,7 @@ resetAllButton.addEventListener("click", () => {
   currentPriceEl.textContent = "--";
   currentSharesEl.textContent = "--";
   currentPriceEl.classList.remove("positive", "negative", "neutral");
+  totalProfitEl.classList.remove("positive", "negative", "neutral");
   realizedProfitEl.classList.remove("positive", "negative", "neutral");
   unrealizedProfitEl.classList.remove("positive", "negative", "neutral");
   renderNodes();
