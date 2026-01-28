@@ -18,6 +18,7 @@ const nodesList = document.getElementById("nodesList");
 const chartGrid = document.getElementById("chartGrid");
 const chartLinePath = document.getElementById("chartLinePath");
 const chartPoints = document.getElementById("chartPoints");
+const chartLabels = document.getElementById("chartLabels");
 const chartEmpty = document.getElementById("chartEmpty");
 
 const state = {
@@ -96,6 +97,7 @@ const renderNodes = () => {
 const renderChart = () => {
   chartGrid.innerHTML = "";
   chartPoints.innerHTML = "";
+  chartLabels.innerHTML = "";
 
   if (!state.initialized) {
     chartLinePath.setAttribute("points", "");
@@ -116,12 +118,9 @@ const renderChart = () => {
   ];
 
   const priceValues = dataPoints.map((point) => point.pricePercent);
-  const holdingValues = dataPoints.map((point) => point.holdingPercent);
 
   const minPrice = Math.min(...priceValues, 0);
   const maxPrice = Math.max(...priceValues, 120);
-  const minHolding = Math.min(...holdingValues, 0);
-  const maxHolding = Math.max(...holdingValues, 120);
 
   const width = 640;
   const height = 260;
@@ -129,8 +128,8 @@ const renderChart = () => {
   const chartWidth = width - padding.left - padding.right;
   const chartHeight = height - padding.top - padding.bottom;
 
-  const scaleX = (value) =>
-    padding.left + ((value - minHolding) / (maxHolding - minHolding || 1)) * chartWidth;
+  const stepCount = Math.max(dataPoints.length - 1, 1);
+  const scaleX = (index) => padding.left + (chartWidth / stepCount) * index;
   const scaleY = (value) =>
     padding.top + (1 - (value - minPrice) / (maxPrice - minPrice || 1)) * chartHeight;
 
@@ -146,8 +145,8 @@ const renderChart = () => {
     chartGrid.appendChild(line);
   }
 
-  for (let i = 0; i <= gridLines; i += 1) {
-    const x = padding.left + (chartWidth / gridLines) * i;
+  for (let i = 0; i <= stepCount; i += 1) {
+    const x = scaleX(i);
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
     line.setAttribute("x1", x);
     line.setAttribute("x2", x);
@@ -158,17 +157,25 @@ const renderChart = () => {
   }
 
   const points = dataPoints
-    .map((point) => `${scaleX(point.holdingPercent)},${scaleY(point.pricePercent)}`)
+    .map((point, index) => `${scaleX(index)},${scaleY(point.pricePercent)}`)
     .join(" ");
   chartLinePath.setAttribute("points", points);
 
-  dataPoints.forEach((point) => {
+  dataPoints.forEach((point, index) => {
     const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    circle.setAttribute("cx", scaleX(point.holdingPercent));
+    circle.setAttribute("cx", scaleX(index));
     circle.setAttribute("cy", scaleY(point.pricePercent));
     circle.setAttribute("r", 4);
     circle.setAttribute("class", "chart-point");
     chartPoints.appendChild(circle);
+
+    const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    label.setAttribute("x", scaleX(index));
+    label.setAttribute("y", height - 10);
+    label.setAttribute("text-anchor", "middle");
+    label.setAttribute("class", "chart-axis-tick");
+    label.textContent = `${point.holdingPercent.toFixed(1)}%`;
+    chartLabels.appendChild(label);
   });
 
   chartEmpty.style.display = state.nodes.length === 0 ? "block" : "none";
